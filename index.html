@@ -207,6 +207,45 @@
     .copy-toast { position: fixed; z-index: 20; right: 20px; bottom: 20px; padding: 12px 16px; border: 1px solid rgba(255,255,255,.2); border-radius: 10px; background: var(--ink); color: white; box-shadow: var(--shadow); font-size: .88rem; opacity: 0; transform: translateY(10px); transition: opacity .22s ease, transform .22s ease; pointer-events: none; }
     .copy-toast.is-visible { opacity: 1; transform: translateY(0); }
     .copy-toast[hidden] { display: none; }
+    .cv-link { color: white; text-underline-offset: 5px; }
+    /* --- CV preview: macOS Preview-style window --- */
+    .cv-preview-dialog { width: min(820px, calc(100vw - 24px)); max-width: none; max-height: min(92dvh, 1080px); padding: 0; overflow: visible; border: 0; border-radius: 18px; background: transparent; color: var(--ink); opacity: 0; transform: translateY(16px) scale(.97); transition: opacity .26s ease, transform .36s cubic-bezier(.2,.8,.2,1), overlay .36s allow-discrete, display .36s allow-discrete; }
+    .cv-preview-dialog[open] { opacity: 1; transform: translateY(0) scale(1); }
+    .cv-preview-dialog.is-closing { opacity: 0; transform: translateY(10px) scale(.985); }
+    .cv-preview-dialog::backdrop { background: rgba(8,9,20,0); -webkit-backdrop-filter: none; backdrop-filter: none; transition: background .26s ease; }
+    .cv-preview-dialog[open]::backdrop { background: rgba(8,9,20,.32); -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .cv-preview-dialog.is-closing::backdrop { background: rgba(8,9,20,0); -webkit-backdrop-filter: none; backdrop-filter: none; }
+    @starting-style { .cv-preview-dialog[open] { opacity: 0; transform: translateY(16px) scale(.97); } .cv-preview-dialog[open]::backdrop { background: rgba(8,9,20,0); } }
+    /* Bright, clearly-visible hairline edge all around + inner inset stroke + strong drop shadow. */
+    .cv-preview-window { box-sizing: border-box; display: flex; flex-direction: column; max-height: min(92dvh, 1080px); overflow: hidden; border: 1px solid rgba(255,255,255,.5); border-radius: 18px; background: rgba(40,40,44,.55); -webkit-backdrop-filter: blur(30px) saturate(180%); backdrop-filter: blur(30px) saturate(180%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 18px 50px rgba(0,0,0,.4); }
+    .cv-preview-toolbar { position: relative; z-index: 1; display: grid; flex: 0 0 auto; min-height: 30px; grid-template-columns: minmax(120px,1fr) auto minmax(120px,1fr); align-items: center; gap: 10px; padding: 3px 12px; background: transparent; }
+    /* Left: two dark translucent circular icon buttons (close X + no-entry), grouped. */
+    .cv-preview-lights { display: flex; align-items: center; gap: 9px; }
+    .cv-preview-circle { display: grid; width: 18px; height: 18px; place-items: center; padding: 0; border: 1px solid rgba(255,255,255,.22); border-radius: 50%; background: rgba(0,0,0,.34); color: rgba(255,255,255,.88); cursor: pointer; transition: background .15s ease, border-color .15s ease; }
+    .cv-preview-circle:hover { background: rgba(0,0,0,.5); border-color: rgba(255,255,255,.34); }
+    .cv-preview-circle svg { width: 11px; height: 11px; }
+    .cv-preview-circle.is-ghost { cursor: default; color: rgba(255,255,255,.55); }
+    .cv-preview-circle.is-ghost:hover { background: rgba(0,0,0,.34); border-color: rgba(255,255,255,.22); }
+    .cv-preview-filename { overflow: hidden; color: #e9e9ec; font-family: var(--sans); font-size: .8rem; font-weight: 600; letter-spacing: .1px; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+    .cv-preview-tools { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+    .cv-preview-tool { display: grid; width: 26px; height: 22px; place-items: center; padding: 0; border: 0; border-radius: 7px; background: transparent; color: #d0d0d5; cursor: default; transition: background .15s ease, color .15s ease; }
+    .cv-preview-tool:hover { background: rgba(255,255,255,.1); color: #fff; }
+    .cv-preview-tool svg { width: 15px; height: 15px; }
+    /* "Open with Preview" pill IS the real download link. */
+    .cv-preview-pill { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 22px; padding: 0 11px; border: 1px solid rgba(255,255,255,.28); border-radius: 999px; background: rgba(0,0,0,.3); color: #f2f2f5; font-family: var(--sans); font-size: .72rem; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background .16s ease, border-color .16s ease; }
+    .cv-preview-pill:hover { background: rgba(0,0,0,.46); border-color: rgba(255,255,255,.4); color: #fff; }
+    .cv-preview-pill svg { width: 12px; height: 12px; }
+    /* Frosted mat: even 7px of the dark frosted window body shows as a continuous frame on all four sides; the white page is a rounded card (11px = 18px window radius − 7px mat) sitting concentric inside the window's rounded corners. */
+    .cv-preview-content { flex: 1 1 auto; min-height: 0; margin: 0; padding: 7px; overflow: auto; box-sizing: border-box; background: transparent; overscroll-behavior: contain; }
+    .cv-preview-content img { display: block; width: 100%; max-width: none; height: auto; margin: 0; border: 0; border-radius: 16px; }
+    @media (max-width: 520px) {
+      .cv-preview-toolbar { min-height: 28px; grid-template-columns: auto 1fr auto; gap: 6px; padding: 3px 9px; }
+      .cv-preview-filename { font-size: .68rem; }
+      .cv-preview-markup, .cv-preview-share { display: none; }
+      .cv-preview-pill { height: 22px; padding: 0 9px; font-size: .68rem; }
+      .cv-preview-content { padding: 5px; }
+      .cv-preview-content img { border-radius: 12px; }
+    }
     footer { position: relative; padding: 25px 0; background: var(--violet); color: rgba(255,255,255,.78); font-family: var(--mono); font-size: .7rem; }
     /* Reuse Arc's subtle 220px alpha-noise tile on blue panels. */
     .hero.grain, .contact.grain, footer.grain {
@@ -372,13 +411,37 @@
         <div>
           <a class="button" href="https://github.com/Golde2341" target="_blank" rel="noopener noreferrer">Visitar GitHub <span aria-hidden="true">↗</span></a>
           <div class="email-actions"><button class="copy-email" type="button" data-copy-email="eliandm2341@gmail.com" aria-label="Copiar correo electrónico">eliandm2341@gmail.com</button><span>LinkedIn: <a href="https://www.linkedin.com/in/eli%C3%A1n-mondrag%C3%B3n-84b3b9269/" target="_blank" rel="noopener noreferrer">Click aqui</a></span></div>
-          <p class="mono" style="margin:12px 0 0;color:rgba(255,255,255,.72);font-size:.68rem">CV: [COMPLETAR enlace]</p>
+          <p class="mono" style="margin:12px 0 0;color:rgba(255,255,255,.72);font-size:.68rem">CV: <a class="cv-link" href="assets/cv.pdf" data-open-cv-preview aria-haspopup="dialog" aria-controls="cv-preview">Ver CV</a></p>
         </div>
       </div>
     </section>
     <div class="contact-wave" aria-hidden="true"></div>
   </main>
   <div class="copy-toast" id="copy-toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+  <dialog class="cv-preview-dialog" id="cv-preview" aria-label="Vista previa del CV">
+    <div class="cv-preview-window">
+      <div class="cv-preview-toolbar">
+        <div class="cv-preview-lights">
+          <button class="cv-preview-circle is-close" type="button" data-close-cv-preview aria-label="Cerrar vista previa">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <span class="cv-preview-filename">HV_ATS_Elián_David_Mondragón_Bravo.pdf</span>
+        <div class="cv-preview-tools">
+          <button class="cv-preview-tool cv-preview-markup" type="button" tabindex="-1" aria-hidden="true" title="Marcar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4.5a1.9 1.9 0 1 0-1.9 1.9"/><circle cx="12" cy="8.3" r=".4" fill="currentColor"/></svg>
+          </button>
+          <button class="cv-preview-tool cv-preview-share" type="button" tabindex="-1" aria-hidden="true" title="Compartir">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4"/><path d="M8 7l4-4 4 4"/><path d="M5 12v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+          </button>
+          <a class="cv-preview-pill" href="assets/cv.pdf" download="HV_ATS_Elian_David_Mondragon_Bravo.pdf">
+            <span class="cv-preview-pill-label">Descargar</span>
+          </a>
+        </div>
+      </div>
+      <div class="cv-preview-content"><img src="assets/cv-preview.jpg" alt="Vista previa del currículum de Elián David Mondragón Bravo"></div>
+    </div>
+  </dialog>
   <footer class="grain"><div class="wrap footer-inner"><span>© <span id="year">2026</span> Elián David Mondragón Bravo</span><span>Diseñado y construido con curiosidad · Bogotá, Colombia</span></div></footer>
   <script>
     // Aparición sutil al entrar en pantalla; conserva el contenido si no hay soporte.
@@ -389,8 +452,12 @@
       const workspaceLinks = document.querySelectorAll('.browser-sidebar a');
       const copyButton = document.querySelector('[data-copy-email]');
       const copyToast = document.getElementById('copy-toast');
+      const cvDialog = document.getElementById('cv-preview');
+      const cvOpenLink = document.querySelector('[data-open-cv-preview]');
+      const cvCloseButton = document.querySelector('[data-close-cv-preview]');
       let copyToastTimer;
       let copyToastHideTimer;
+      let cvCloseTimer;
       const showCopyToast = (message) => {
         if (!copyToast) return;
         copyToast.textContent = message;
@@ -425,6 +492,31 @@
           } catch {
             showCopyToast('No se pudo copiar. Usa el enlace de correo.');
           }
+        });
+      }
+      if (cvDialog && cvOpenLink && cvCloseButton && typeof cvDialog.showModal === 'function') {
+        const closeCvPreview = () => {
+          if (!cvDialog.open || cvDialog.classList.contains('is-closing')) return;
+          cvDialog.classList.add('is-closing');
+          clearTimeout(cvCloseTimer);
+          cvCloseTimer = setTimeout(() => {
+            cvDialog.close();
+            cvDialog.classList.remove('is-closing');
+          }, 300);
+        };
+        cvOpenLink.addEventListener('click', (event) => {
+          event.preventDefault();
+          clearTimeout(cvCloseTimer);
+          cvDialog.classList.remove('is-closing');
+          cvDialog.showModal();
+        });
+        cvCloseButton.addEventListener('click', closeCvPreview);
+        cvDialog.addEventListener('click', (event) => {
+          if (event.target === cvDialog) closeCvPreview();
+        });
+        cvDialog.addEventListener('cancel', (event) => {
+          event.preventDefault();
+          closeCvPreview();
         });
       }
       workspaceLinks.forEach((link) => link.addEventListener('click', () => {
